@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://android.com"
     xmlns:tools="http://android.com">
 
-    <!-- Izin dasar untuk membaca file APK plugin dari penyimpanan internal aplikasi -->
+    <!-- Izin dasar membaca plugin dari folder internal aplikasi -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <!-- Izin internet untuk kebutuhan komunikasi data -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -16,7 +15,7 @@
         android:theme="@android:style/Theme.Material.NoActionBar"
         tools:targetApi="34">
         
-        <!-- Launcher Utama Aplikasi Utama Anda -->
+        <!-- Jalur nama aktivitas utama wajib menggunakan nama paket absolut -->
         <activity
             android:name="com.chmods.MainActivity"
             android:exported="true"
@@ -27,10 +26,10 @@
             </intent-filter>
         </activity>
 
-        <!-- Provider Wajib untuk Menghubungkan Akses Shizuku API -->
+        <!-- Provider interkoneksi Shizuku API -->
         <provider
             android:name="moe.shizuku.api.ShizukuBinderReceiveProvider"
-            android:authorities="${applicationId}.shizuku"
+            android:authorities="com.chmods.shizuku"
             android:exported="true"
             android:enabled="true"
             android:multiprocess="false"
