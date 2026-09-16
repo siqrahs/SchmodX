@@ -56,7 +56,7 @@ android {
 
 dependencies {
     // 1. Hubungkan dengan modul kontrak antarmuka internal
-    implementation(project(":shared-interface"))
+     // implementation(project(":shared-interface"))
 
     // 2. Androidx Core & Lifecycle
     implementation("androidx.core:core-ktx:1.12.0")
