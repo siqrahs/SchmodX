@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.chmods"
-        minSdk = 26 // Diperlukan untuk DexClassLoader dan Shizuku yang stabil
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0-Beta"
@@ -22,7 +22,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false // Setel true jika ingin Proguard/R8 aktif saat rilis resmi
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -44,7 +44,7 @@ android {
     }
     
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.8" // Harus cocok dengan versi Kotlin 1.9.x
+        kotlinCompilerExtensionVersion = "1.5.9"
     }
     
     packaging {
@@ -55,31 +55,28 @@ android {
 }
 
 dependencies {
-    // 1. Hubungkan dengan modul kontrak antarmuka internal
-     // implementation(project(":shared-interface"))
+    // Androidx Core & Lifecycle
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
+    implementation("androidx.activity:activity-compose:1.9.0")
 
-    // 2. Androidx Core & Lifecycle
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
-
-    // 3. Jetpack Compose UI Suite (Untuk Dashboard Screen & Settings)
-    implementation(platform("androidx.compose:compose-bom:2024.01.00"))
+    // Jetpack Compose UI Suite
+    implementation(platform("androidx.compose:compose-bom:2024.04.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
 
-    // 4. Integrasi Shizuku API (Menghubungkan ke ADB Shell tanpa root)
+    // Shizuku API
     implementation("dev.rikka.shizuku:api:13.1.5")
     implementation("dev.rikka.shizuku:provider:13.1.5")
 
-    // 5. Kebutuhan unit testing basic
+    // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.01.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.04.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
