@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: Compile and Sign App Core APK
+    name: Compile Debug APK
     runs-on: ubuntu-latest
 
     steps:
@@ -18,28 +18,14 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
-    # KITA PASANG GRADLE MANUAL DI SINI AGAR TIDAK BUTUH FILE GRADLEW
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-      with:
-        gradle-version: 8.2.2
+    # Menjalankan build debug langsung menggunakan perintah gradle bawaan runner global
+    # Perintah 'assembleDebug' tidak membutuhkan konfigurasi keystore apa pun
+    # Menggunakan flag --no-daemon agar lebih stabil di lingkungan container
+    # Ditambahkan parameter khusus untuk bypass download gradle wrapper
+    run: gradle :app-core:assembleDebug --no-daemon
 
-    # PERINTAH DIUBAH: Menggunakan 'gradle' langsung, bukan './gradlew'
-    - name: Build Aplikasi Induk Berbasis Gradle (:app-core)
-      run: gradle :app-core:assembleRelease
-
-    - name: Sign Android Release APK
-      uses: r0adkll/sign-android-release@v1
-      id: sign_app
-      with:
-        releaseDirectory: app-core/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-        alias: ${{ secrets.ALIAS }}
-        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-    - name: Upload Signed APK Core ke Artifact GitHub
+    - name: Upload Debug APK Core ke Artifact GitHub
       uses: actions/upload-artifact@v4
       with:
-        name: chmods-app-core-release
-        path: ${{ steps.sign_app.outputs.signedReleaseFile }}
+        name: chmods-app-core-debug
+        path: app-core/build/outputs/apk/debug/app-core-debug.apk
