@@ -1,0 +1,43 @@
+name: Build Chmods App Core (Aplikasi Induk)
+
+on:
+  workflow_dispatch: # Pemicu manual lewat tab Actions di GitHub resmi Anda
+
+jobs:
+  build:
+    name: Compile and Sign App Core APK
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Set up Java JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+        cache: 'gradle'
+
+    - name: Grant Execute Permission untuk Gradle Wrapper
+      run: chmod +x gradlew
+
+    - name: Build Aplikasi Induk Berbasis Gradle (:app-core)
+      run: ./gradlew :app-core:assembleRelease
+
+    # Bagian penandatanganan otomatis menggunakan rahasia enkripsi GitHub Secrets
+    - name: Sign Android Release APK
+      uses: r0adkll/sign-android-release@v1
+      id: sign_app
+      with:
+        releaseDirectory: app-core/build/outputs/apk/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+    - name: Upload Signed APK Core ke Artifact GitHub
+      uses: actions/upload-artifact@v4
+      with:
+        name: chmods-app-core-release
+        path: ${{ steps.sign_app.outputs.signedReleaseFile }}
