@@ -1,7 +1,7 @@
 name: Build Chmods App Core (Aplikasi Induk)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Baris ini yang memunculkan tombol "Run manual" di GitHub
 
 jobs:
   build:
@@ -18,14 +18,11 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
-    # Menjalankan build debug langsung menggunakan perintah gradle bawaan runner global
-    # Perintah 'assembleDebug' tidak membutuhkan konfigurasi keystore apa pun
-    # Menggunakan flag --no-daemon agar lebih stabil di lingkungan container
-    # Ditambahkan parameter khusus untuk bypass download gradle wrapper
-    run: gradle :app-core:assembleDebug --no-daemon
+    - name: Compile Modul Aplikasi ke APK Debug
+      run: gradle :app-core:assembleDebug --no-daemon
 
-    - name: Upload Debug APK Core ke Artifact GitHub
+    - name: Upload Hasil APK Ke GitHub Artifact
       uses: actions/upload-artifact@v4
       with:
         name: chmods-app-core-debug
-        path: app-core/build/outputs/apk/debug/app-core-debug.apk
+        path: app-core/build/outputs/apk/debug/
