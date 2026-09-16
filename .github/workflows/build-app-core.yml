@@ -1,7 +1,7 @@
 name: Build Chmods App Core (Aplikasi Induk)
 
 on:
-  workflow_dispatch: # Pemicu manual lewat tab Actions di GitHub resmi Anda
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,15 +17,17 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: '17'
-        cache: 'gradle'
 
-    - name: Grant Execute Permission untuk Gradle Wrapper
-      run: chmod +x gradlew
+    # KITA PASANG GRADLE MANUAL DI SINI AGAR TIDAK BUTUH FILE GRADLEW
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+      with:
+        gradle-version: 8.2.2
 
+    # PERINTAH DIUBAH: Menggunakan 'gradle' langsung, bukan './gradlew'
     - name: Build Aplikasi Induk Berbasis Gradle (:app-core)
-      run: ./gradlew :app-core:assembleRelease
+      run: gradle :app-core:assembleRelease
 
-    # Bagian penandatanganan otomatis menggunakan rahasia enkripsi GitHub Secrets
     - name: Sign Android Release APK
       uses: r0adkll/sign-android-release@v1
       id: sign_app
